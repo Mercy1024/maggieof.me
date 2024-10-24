@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>Maggie</title>
+</head>
+ <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MMH4BHP8"
+        height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <body class="relative h-screen m-0 flex justify-center">
+    <div class="max-w-[600px] w-full relative">
+        <div class="absolute top-2 right-2 w-12 h-auto z-20">
+            <img src="/images/onlyfans-logo.svg" alt="OnlyFans Logo">
+        </div>
+        <div class="text-center mt-8 relative z-20">
+            <img src="/images/profile.jpg" alt="Creator" class="mx-auto rounded-full w-32 h-32 object-cover border-4 border-white shadow-sm">
+            <h2 class="text-3xl text-white font-bold mt-4 drop-shadow"> Maggie</h2>
+            <p class="text-xl text-white font-bold drop-shadow">@maggiepuff</p>
+            <div class="flex items-center justify-center mt-2">
+                <img src="/images/status.svg" alt="Online now" class="w-4 h-4 mr-1">
+                <span class="text-white text-sm drop-shadow">Online now</span>
+                <img src="/images/seperator.svg" alt="Separator" class="w-4 h-4 mx-1">
+                <img src="/images/clock.svg" alt="Responds in 2 minutes" class="w-4 h-4 mr-1">
+                <span class="text-white text-sm drop-shadow">Responds in 2 minutes</span>
+            </div>
+        </div>
+        <!-- Add this new div for the blurred background -->
+        <div class="fixed top-0 left-0 w-full h-full bg-black/50 backdrop-blur-md hidden lg:block" style="z-index: -2;"></div>
+
+        <!-- Update the video element -->
+        <video autoplay muted loop playsinline class="fixed top-0 left-0 right-0 bottom-0 w-full h-full max-w-[600px] z-[-1] object-cover m-auto">
+            <source src="/images/My_Video (1).mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video> 
+        <div class="text-center relative z-20 mt-4">
+            <p id="locationMessage" class="text-white mb-3 hidden">If you're from <span id="userCity">your city</span>, DM me about making content</p>
+            <a href="https://onlyfans.com/maggiepuff" id="messageLink">
+                <button id="messageBtn" class="relative bg-[#16aae9] font-bold text-white px-6 py-3 text-lg rounded hover:bg-[#0e8bb8] transition duration-300 flex items-center justify-center mx-auto">
+                    <img src="/images/onlyfans-logo.svg" alt="OnlyFans Logo" class="w-6 h-6 mr-2">
+                    Send me a message
+                </button>
+            </a>
+            <div id="countdown" class="text-white font-bold text-xs mt-2">🎁 50% OFF - Ends in 10m 00sec</div>
+        </div>
+
+        <!-- Notification Container -->
+        <div id="notification" class="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-[600px] bg-blue-500 text-white text-center py-2 hidden" style="z-index: 9999;">
+            <span id="notification-text"></span>
+        </div>
+
+        <!-- Gradient and Footer Image -->
+        <div class="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-black to-transparent flex items-center justify-center text-white">
+            Linktree <img src="/images/footerlogo.svg" alt = "Footer Logo" class="w-3 ml-1">
+        </div>
+    </div>
+<script>
+        $(document).ready(function() {
+            var countdownTime = 10 * 60; // 10 minutes in seconds
+            var countdownElement = $('#countdown');
+
+            function updateCountdown() {
+                var minutes = Math.floor(countdownTime / 60);
+                var seconds = countdownTime % 60;
+                countdownElement.text(`🎁 70% OFF - Ends in ${minutes}m ${seconds < 10 ? '0' : ''}${seconds}sec`);
+                if (countdownTime > 0) {
+                    countdownTime--;
+                } else {
+                    clearInterval(countdownInterval);
+                }
+            }
+
+            var countdownInterval = setInterval(updateCountdown, 1000);
+            updateCountdown(); // Initial call to set the countdown immediately
+
+            // Notification system
+            var notifications = ["🔔 Kylan has subscribed to Maggie today", "🔔 Dan has subscribed to Maggie today", "🔔 Jeff has subscribed to Maggie today"];
+            var currentNotificationIndex = 0;
+
+            function showNotification() {
+                $('#notification-text').text(notifications[currentNotificationIndex]);
+                $('#notification').fadeIn(500).delay(4500).fadeOut(500, function() {
+                    currentNotificationIndex = (currentNotificationIndex + 1) % notifications.length;
+                });
+            }
+
+            setInterval(showNotification, 5000);
+
+            // Fetch user's IP address
+            console.log('Attempting to fetch user IP...');
+            $.getJSON('https://api.ipify.org?format=json', function(data) {
+                console.log('IP:', data.ip);
+                // Fetch location based on IP
+                $.getJSON('https://ipapi.co/' + data.ip + '/json/', function(response) {
+                    console.log('Location data:', response);
+                    if (response.city) {
+                        $('#userCity').text(response.city);
+                        $('#locationMessage').removeClass('hidden').show();
+                        console.log('Location message updated with city:', response.city);
+                    } else {
+                        $('#locationMessage').hide();
+                        console.log('City information not available');
+                    }
+                }).fail(function(jqXHR, textStatus, errorThrown) {
+                    $('#locationMessage').hide();
+                    console.error('Error fetching location:', textStatus, errorThrown);
+                });
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                $('#locationMessage').hide();
+                console.error('Error fetching IP:', textStatus, errorThrown);
+            });
+        });
+    </script>
+    
+</body>
+</html>
